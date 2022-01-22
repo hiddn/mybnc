@@ -358,7 +358,7 @@ int main (int argc, char **argv)
 	//char *obufc;
 	char *bufa;
 	char *obufa;
-	int sendqsend=0;
+	//int sendqsend=0;
 	struct CLIENTS *c;
 	struct CLIENTS *next;
 	int go_break = 0;
@@ -561,7 +561,7 @@ int main (int argc, char **argv)
 
 
 	do {
-		sendqsend=0;
+		//sendqsend=0;
 		tv.tv_sec = 5;
 		tv.tv_usec = 0;
 
@@ -593,7 +593,7 @@ int main (int argc, char **argv)
 				if (connectedserver) {
 					if ((c->pingtime > 0) && ((getctime() - c->pingtime) > 0)) {
 						//ping timeout
-						snotice("PING TIMEOUT", PINGTIMEOUT);
+						snotice("PING TIMEOUT (after %d seconds)", PINGTIMEOUT);
 						sendt(c->fd, "ERROR :Ping timeout");
 						if (KEEPALIVE == 1) {
 							if (clientcount() < 2) {
@@ -620,7 +620,7 @@ int main (int argc, char **argv)
 				FD_SET(c->fd,&ufd);
 				if (*c->c_sendqbuf != '\0') {
 					FD_SET(c->fd,&wfd);
-					sendqsend=1;
+					//sendqsend=1;
 				}
 			}
 			c = next;
@@ -633,7 +633,7 @@ int main (int argc, char **argv)
 			FD_SET(servinfos.sockfd,&ufd);
 			if (*s_sendqbuf != '\0') {
 				FD_SET(servinfos.sockfd,&wfd);
-				sendqsend=1;
+				//sendqsend=1;
 			}
 		}
 
@@ -1111,7 +1111,7 @@ int readsock (int sockfd, int tofd, char *buf, char *obuf, int bufsize, int *rin
 
 		if (n > strlen(buf+*rind)) {
 			if ((n - strlen(buf+*rind)) > 1)
-				alog("data received contained a '\0' char. Ignoring the %d chars after the '\0'", (n - strlen(buf+*rind)));
+				alog("data received contained a NULL char. Ignoring the %zu chars after", (n - strlen(buf+*rind)));
 			for (i=0; i<(n-1); i++) {
 				if (*(buf+*rind+i) == '\0') {
 					if (*(buf+*rind+i-1) != '\n') {
@@ -1766,7 +1766,7 @@ int evalcom (int sockfd, char *line, char **w, int wcount)
 
 				// Self quicklog
 				if (strlen(line) > (BUFSZ - 18)) {
-					alog("Error: line for quicklog too long, it exceeds (1024-18) chars: %d", strlen(line));
+					alog("Error: line for quicklog too long, it exceeds (1024-18) chars: %zu", strlen(line));
 					return 0;
 				}
 				*buf = 0;
@@ -2195,7 +2195,7 @@ int evalcom (int sockfd, char *line, char **w, int wcount)
 		if (wcount > 1) {
 			if (strcasecmp(w[1], "WALLOPS") == 0) {
 				if (strlen(line) > (BUFSZ - 18)) {
-					alog("Error: line for quicklog too long, it exceeds (1024-18) chars: %d", strlen(line));
+					alog("Error: line for quicklog too long, it exceeds (1024-18) chars: %zu", strlen(line));
 					return 0;
 				}
 				*buf = 0;
@@ -2218,7 +2218,7 @@ int evalcom (int sockfd, char *line, char **w, int wcount)
 			}
 			if (strcasecmp(w[1], "PRIVMSG") == 0) {
 				if (strlen(line) > (BUFSZ - 18)) {
-					alog("Error: line for quicklog too long, it exceeds (1024-18) chars: %d", strlen(line));
+					alog("Error: line for quicklog too long, it exceeds (1024-18) chars: %zu", strlen(line));
 					return 0;
 				}
 				if (onchan(w[2]))
@@ -2271,7 +2271,7 @@ int evalcom (int sockfd, char *line, char **w, int wcount)
 			}*/
 			if (strcasecmp(w[1], "NOTICE") == 0) {
 				if (strlen(line) > (BUFSZ - 18)) {
-					alog("Error: line for quicklog too long, it exceeds (1024-18) chars: %d", strlen(line));
+					alog("Error: line for quicklog too long, it exceeds (1024-18) chars: %zu", strlen(line));
 					return 0;
 				}
 				*buf = 0;
@@ -3199,7 +3199,7 @@ int sendqueue (int fd)
 			*sendqsize -= bytessent;
 			if (totbs == buflen) {
 				if (*sendqsize != 0) {
-					dout("sendqueue(): Shit!, sendqsize=%d and strlen(buf+i)=%d\n", *sendqsize, strlen(buf+i));
+					dout("sendqueue(): Shit!, sendqsize=%d and strlen(buf+i)=%zu\n", *sendqsize, strlen(buf+i));
 					*sendqsize = 0;
 				}
 				*buf = '\0';
@@ -3341,7 +3341,7 @@ int mywrite (int tofd, char *buf, int n)
 	}
 
 	if (n > strlen(buf)) {
-		dout("mywrite(): What the hell ? n=%d and strlen(buf)=%d\n", n, strlen(buf));
+		dout("mywrite(): What the hell ? n=%d and strlen(buf)=%zu\n", n, strlen(buf));
 		alog("mywrite(): error ...");
 		dout("buf[n-2] = %d and buf[n-1] = %d", buf[n-2], buf[n-1]);
 		dout("and buf = %s\n", buf);
@@ -3486,7 +3486,7 @@ int sendlog (int fd, int type, int size, char *chan)
 	int j=0;
 	int a=0;
 	static char** w=0;
-	int wcount=0;
+	//int wcount=0;
 	int sent=0;
 	int logtbufsize=0;
 	struct CLIENTS *c = getclient(fd);
@@ -3548,7 +3548,8 @@ int sendlog (int fd, int type, int size, char *chan)
 			if (j > 0) {
 				strncpy(line, ptr+1, 2047);
 				line[2047] = '\0';
-				wcount = readline(line, w, MAXWORDS, -10);
+				//wcount = readline(line, w, MAXWORDS, -10);
+				readline(line, w, MAXWORDS, -10);
 				if (logtbufsize != 0) {
 					memmove(logtbuf+j, logtbuf, logtbufsize+1);
 					if (*(logtbuf + j + logtbufsize) != '\0')
@@ -3583,7 +3584,8 @@ int sendlog (int fd, int type, int size, char *chan)
 			if (j > 0) {
 				strncpy(line, ptr+1, j);
 				line[j] = '\0';
-				wcount = readline(line, w, MAXWORDS, -10);
+				//wcount = readline(line, w, MAXWORDS, -10);
+				readline(line, w, MAXWORDS, -10);
 				if (((strcasecmp(w[1], "PRIVMSG") == 0) || (strcasecmp(w[1], "NOTICE") == 0)) && (w[2][0] != '#') && (w[2][0] != '&')) {
 					if (logtbufsize != 0) {
 						memmove(logtbuf+j, logtbuf, logtbufsize+1);
@@ -3618,7 +3620,8 @@ int sendlog (int fd, int type, int size, char *chan)
 			if (j > 0) {
 				strncpy(line, ptr+1, j);
 				line[j] = '\0';
-				wcount = readline(line, w, MAXWORDS, -10);
+				//wcount = readline(line, w, MAXWORDS, -10);
+				readline(line, w, MAXWORDS, -10);
 				if (((strcasecmp(w[1], "PRIVMSG") == 0) || (strcasecmp(w[1], "NOTICE") == 0)) && (strcasecmp(w[2], chan) == 0)) {
 					if (logtbufsize != 0) {
 						memmove(logtbuf+j, logtbuf, logtbufsize+1);
