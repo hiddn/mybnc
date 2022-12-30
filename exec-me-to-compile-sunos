@@ -1,1 +1,0 @@
-gcc mybnc.c -g -o mybnc -Wall -lsocket -lnsl
