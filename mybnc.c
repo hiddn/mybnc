@@ -1475,6 +1475,7 @@ int evalcom (int sockfd, char *line, char **w, int wcount)
 			strncpy(slots[a].user,w[1], USERLEN);
 			slots[a].user[USERLEN] = '\0';
 			strncpy(rname,&w[4][1],RNAMELEN);
+			rname[RNAMELEN] = '\0';
 			i=5;
 			while(i <= wcount) {
 				if ((RNAMELEN - strlen(rname)) > 2) {
