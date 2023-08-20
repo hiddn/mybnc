@@ -57,8 +57,10 @@ int main (argc, argv)
     fgets (phpass, 1024, stdin);
     for (p = 0; phpass[p]; p++)
     {
-      if (p > 1024)
+      if (p >= 1023) {
+	phpass[p] = '\0';
 	break;
+      }
       if (phpass[p] == '\n')
 	phpass[p] = '\0';
     }
