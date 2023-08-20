@@ -3,7 +3,7 @@ Hidden <hidden@undernet.org>
 
 ## To compile
 ```
-gcc mybnc.c -g -o mybnc -Wall -lcrypt
+make
 ```
 
 ## Configuration
