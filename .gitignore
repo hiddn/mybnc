@@ -4,3 +4,5 @@ mybnc.conf
 mkpasswd
 mybnc.allow
 mybnc.pid
+mybnc.log
+debug.log
