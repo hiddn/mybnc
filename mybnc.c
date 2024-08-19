@@ -199,11 +199,11 @@ static int parse_opts(int argc, char **argv)
 			printf("debug to file enabled\n");
 			break;
 		case '?':
-			fprintf(stderr, "Invalid option: %c\n", optopt);
+			fprintf(stderr, "Invalid option: %c\n", opt);
 			err = -1;
 			break;
 		case ':':
-			fprintf(stderr, "Option %c requires a parameter\n", optopt);
+			fprintf(stderr, "Option %c requires a parameter\n", opt);
 			err = -1;
 			break;
 		default:
