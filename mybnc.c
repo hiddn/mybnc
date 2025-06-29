@@ -2491,7 +2491,7 @@ int loadipsallowed ()
 	     }
 	     ptr->next = ipsallowed;
 	     ipsallowed = ptr;
-	     len = snprintf(ptr->mask, HOSTLEN, wc);
+	     len = snprintf(ptr->mask, HOSTLEN, "%s", wc);
 	     ptr->mask[len-1] = '\0';
 	}
 
